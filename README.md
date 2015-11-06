@@ -1,2 +1,1 @@
-# gulp-project
-Gulp project files
+# Gulp project files
