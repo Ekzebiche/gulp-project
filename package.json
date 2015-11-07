@@ -1,7 +1,7 @@
 {
-  "name": "testgulp",
+  "name": "",
   "version": "1.0.0",
-  "description": "praktik60",
+  "description": "",
   "author": "Sprime",
   "devDependencies": {
     "gulp": "^3.9.0",
