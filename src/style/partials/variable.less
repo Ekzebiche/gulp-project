@@ -1,0 +1,18 @@
+@img: '../images';
+
+.transition(@property: all, @duration: 0.2s, @function: ease) {
+	-webkit-transition: @property @duration @function;
+	   -moz-transition: @property @duration @function;
+		 -o-transition: @property @duration @function;
+			transition: @property @duration @function;
+}
+.transform(...) {
+	-webkit-transform: @arguments;
+	   -moz-transform: @arguments;
+		-ms-transform: @arguments;
+		 -o-transform: @arguments;
+			transform: @arguments;
+}
+.rotate(@deg: 0deg){
+	.transform(rotate(@deg));
+}

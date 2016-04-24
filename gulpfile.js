@@ -6,9 +6,10 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     less = require('gulp-less'),
     rigger = require('gulp-rigger'),
-    cssmin = require('gulp-minify-css'),
+    cssmin = require('gulp-clean-css'),
     imagemin = require('gulp-imagemin'),
-    pngquant = require('imagemin-pngquant');
+    pngquant = require('imagemin-pngquant'),
+    sourcemaps = require('gulp-sourcemaps');
 
 var path = {
     build: { //Тут мы укажем куда складывать готовые после сборки файлы
@@ -16,20 +17,25 @@ var path = {
         js: 'build/js/',
         css: 'build/css/',
         img: 'build/images/',
-        fonts: 'build/fonts/'
+        fonts: 'build/fonts/',
+        temp: 'build/temp/'
     },
     src: { //Пути откуда брать исходники
-        html: 'src/*.html', //Синтаксис src/*.html говорит gulp что мы хотим взять все файлы с расширением .html
-        js: 'src/js/main.js',//В стилях и скриптах нам понадобятся только main файлы
+        html: 'src/*.html',
+        js: 'src/js/*.js',
         style: 'src/style/styles.less',
-        img: 'src/images/**/*.*', //Синтаксис img/**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
+        stylecss: 'src/style/*.css',
+        img: 'src/images/**/*.*',
+        temp: 'src/temp/**/*.*',
         fonts: 'src/fonts/**/*.*'
     },
     watch: { //Тут мы укажем, за изменением каких файлов мы хотим наблюдать
         html: 'src/**/*.html',
-        js: 'src/js/**/*.js',
+        js: 'src/js/*.js',
         style: 'src/style/**/*.less',
+        stylecss: 'src/style/*.css',
         img: 'src/images/**/*.*',
+        temp: 'src/temp/**/*.*',
         fonts: 'src/fonts/**/*.*'
     },
     clean: './build'
@@ -42,18 +48,16 @@ gulp.task('html:build', function () {
 });
 
 gulp.task('js:build', function () {
-    gulp.src(path.src.js) 
-        .pipe(rigger())  
-        .pipe(uglify()) 
+    gulp.src(path.src.js)
         .pipe(gulp.dest(path.build.js));
 });
 
 gulp.task('style:build', function () {
     gulp.src(path.src.style) 
-        .pipe(less({
-            includePaths: ['src/style/']
-        }))
+        .pipe(less())
         .pipe(prefixer())
+        .pipe(cssmin({compatibility: 'ie8'}))
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest(path.build.css));
 });
 
@@ -62,10 +66,19 @@ gulp.task('image:build', function () {
         .pipe(imagemin({
             progressive: true,
             svgoPlugins: [{removeViewBox: false}],
-            use: [pngquant()],
-            interlaced: true
+            use: [pngquant()]
         }))
         .pipe(gulp.dest(path.build.img));
+});
+
+gulp.task('temp:build', function () {
+    gulp.src(path.src.temp) 
+        //.pipe(imagemin({
+        //    progressive: true,
+        //    svgoPlugins: [{removeViewBox: false}],
+        //    use: [pngquant()]
+        //}))
+        .pipe(gulp.dest(path.build.temp));
 });
 
 gulp.task('fonts:build', function() {
@@ -77,8 +90,10 @@ gulp.task('build', [
     'html:build',
     'js:build',
     'style:build',
+    'stylecss:build',
     'fonts:build',
-    'image:build'
+    'image:build',
+    'temp:build'
 ]);
 
 gulp.task('watch', function(){
@@ -88,11 +103,17 @@ gulp.task('watch', function(){
     watch([path.watch.style], function(event, cb) {
         gulp.start('style:build');
     });
+    watch([path.watch.stylecss], function(event, cb) {
+        gulp.start('stylecss:build');
+    });
     watch([path.watch.js], function(event, cb) {
         gulp.start('js:build');
     });
     watch([path.watch.img], function(event, cb) {
         gulp.start('image:build');
+    });
+    watch([path.watch.temp], function(event, cb) {
+        gulp.start('temp:build');
     });
     watch([path.watch.fonts], function(event, cb) {
         gulp.start('fonts:build');
