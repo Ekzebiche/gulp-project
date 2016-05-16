@@ -55,9 +55,22 @@ gulp.task('js:build', function () {
 gulp.task('style:build', function () {
     gulp.src(path.src.style) 
         .pipe(less())
-        .pipe(prefixer())
-        .pipe(cssmin({compatibility: 'ie8'}))
+        .pipe(prefixer({
+            cascade: false,
+            browsers: ['last 10 versions', 'IE 9']
+        }))
+        .pipe(cssmin({compatibility: ''}))
         .pipe(sourcemaps.write())
+        .pipe(gulp.dest(path.build.css));
+});
+
+gulp.task('stylecss:build', function () {
+    gulp.src(path.src.stylecss)
+        .pipe(prefixer({
+            cascade: false,
+            browsers: ['last 10 versions', 'IE 9']
+        }))
+        .pipe(cssmin({compatibility: ''}))
         .pipe(gulp.dest(path.build.css));
 });
 
