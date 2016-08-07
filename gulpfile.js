@@ -9,7 +9,7 @@ var gulp = require('gulp'),
     cssmin = require('gulp-clean-css'),
     imagemin = require('gulp-imagemin'),
     pngquant = require('imagemin-pngquant'),
-    sourcemaps = require('gulp-sourcemaps');
+    rimraf = require('rimraf');
 
 var path = {
     build: { //Тут мы укажем куда складывать готовые после сборки файлы
@@ -24,7 +24,7 @@ var path = {
         html: 'src/*.html',
         js: 'src/js/*.js',
         style: 'src/style/styles.less',
-        stylecss: 'src/style/*.css',
+        stylecss: 'src/style/otherstyles.less',
         img: 'src/images/**/*.*',
         temp: 'src/temp/**/*.*',
         fonts: 'src/fonts/**/*.*'
@@ -33,13 +33,17 @@ var path = {
         html: 'src/**/*.html',
         js: 'src/js/*.js',
         style: 'src/style/**/*.less',
-        stylecss: 'src/style/*.css',
+        stylecss: 'src/style/**/*.css',
         img: 'src/images/**/*.*',
         temp: 'src/temp/**/*.*',
         fonts: 'src/fonts/**/*.*'
     },
     clean: './build'
 };
+
+gulp.task('clean', function (cb) {
+    rimraf(path.clean, cb);
+});
 
 gulp.task('html:build', function () {
     gulp.src(path.src.html)
