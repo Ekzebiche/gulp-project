@@ -9,6 +9,7 @@ var gulp = require('gulp'),
     cssmin = require('gulp-clean-css'),
     imagemin = require('gulp-imagemin'),
     pngquant = require('imagemin-pngquant'),
+    sourcemaps = require('gulp-sourcemaps'),
     rimraf = require('rimraf');
 
 var path = {
@@ -22,20 +23,27 @@ var path = {
     },
     src: { //Пути откуда брать исходники
         html: 'src/*.html',
+
         js: 'src/js/*.js',
         style: 'src/style/styles.less',
         stylecss: 'src/style/otherstyles.less',
+
         img: 'src/images/**/*.*',
         temp: 'src/temp/**/*.*',
+
         fonts: 'src/fonts/**/*.*'
     },
     watch: { //Тут мы укажем, за изменением каких файлов мы хотим наблюдать
         html: 'src/**/*.html',
+
         js: 'src/js/*.js',
+
         style: 'src/style/**/*.less',
         stylecss: 'src/style/**/*.css',
+
         img: 'src/images/**/*.*',
         temp: 'src/temp/**/*.*',
+
         fonts: 'src/fonts/**/*.*'
     },
     clean: './build'
@@ -64,7 +72,6 @@ gulp.task('style:build', function () {
             browsers: ['last 10 versions', 'IE 9']
         }))
         .pipe(cssmin({compatibility: ''}))
-        .pipe(sourcemaps.write())
         .pipe(gulp.dest(path.build.css));
 });
 
