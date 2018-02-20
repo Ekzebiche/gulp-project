@@ -1,0 +1,24 @@
+{% extends 'layouts/base.html' %}
+
+{% macro svg(id) %}
+<svg xmlns="http://www.w3.org/2000/svg" class="svg svg-{{id}}-dims">
+  <use xlink:href="#{{id}}"></use>
+</svg>
+{% endmacro %}
+
+{% set mainPage = true %}
+
+{% block content %}
+<section class="main">
+  <div class="wrapper">
+    <h1>Hello world!</h1>
+
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+
+    {{ svg('lead') }}
+    {{ svg('search-engine') }}
+  </div>
+</section>
+{% endblock %}

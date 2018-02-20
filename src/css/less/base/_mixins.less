@@ -1,0 +1,389 @@
+.invisible() {
+	opacity: 0;
+	visibility: hidden;
+}
+
+.visible() {
+	opacity: 1;
+	visibility: visible;
+}
+
+.nl() {
+  margin: 0;
+  padding: 0;
+  text-indent: 0;
+  list-style: none;
+  list-style-position: outside;
+}
+
+.blocks-justify() {
+  text-align: justify;
+  text-justify: newspaper;
+}
+
+/*------------------------------------*\
+	# Clearfix
+\*------------------------------------*/
+.clearfix() {
+	*zoom: 1;
+
+	&:before, &:after {
+		clear: both;
+		content: '';
+		display: block;
+		line-height: 0;
+	}
+}
+
+/*------------------------------------------------------------------------*\
+	# Hide only visually, but have it available for screen readers
+	# https://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+\*------------------------------------------------------------------------*/
+.visualhide() {
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  white-space: nowrap;
+}
+
+/*------------------------------------*\
+	# Responsive
+\*------------------------------------*/
+.media-query(@maxWidth; @rules) {
+	@media screen {
+		@media (max-width: @maxWidth) {
+			@rules();
+		}
+	}
+}
+
+/*------------------------------------*\
+	# Font Family
+\*------------------------------------*/
+.font-family(@value: @baseFont) when not (@value = false) {
+	font-family: ~'@{value}';
+}
+
+/*------------------------------------*\
+	# Font Size (rem)
+\*------------------------------------*/
+.font-size(@font-size: @baseFontSize) {
+  @rem: round(@font-size / @baseFontSize, 3);
+  //font-size: @font-size * 1px; //fallback to pixels
+  font-size: ~"@{rem}rem";
+}
+
+/*------------------------------------*\
+	# Font Loading
+\*------------------------------------*/
+.load-font(@name; @file: @name; @weight: normal; @style: normal) {
+	@font-face {
+		font-family: ~'@{name}';
+		font-style: @style;
+		font-weight: @weight;
+
+		.check() when (@woff2Enabled = true) {
+			src: url('@{fontPath}@{file}.woff2') format('woff2'),
+				 url('@{fontPath}@{file}.woff') format('woff'),
+				 url('@{fontPath}@{file}.ttf') format('truetype');
+		}
+		.check() when (default()) {
+			src: url('@{fontPath}@{file}.woff') format('woff'),
+				 url('@{fontPath}@{file}.ttf') format('truetype');
+		}
+		.check();
+	}
+}
+
+/*------------------------------------*\
+	# Grid
+\*------------------------------------*/
+.row(@margin: @gridMargin) when (ispercentage(@margin)) {
+	margin-left: (@margin * -1);
+	max-width: (100% + @margin);
+
+	.clearfix();
+}
+.row-modify(@margin: @gridMargin) {
+	margin-left: (@margin * -1);
+	max-width: (100% + @margin);
+}
+.row-reset() {
+	margin-left: 0;
+	max-width: none;
+}
+.column(...) {
+	float: left;
+}
+.column(@width: 100%) when not (isunit(@width, '')) {
+	width: @width;
+}
+.column(@share; @columns: @gridColumns) when (isunit(@share, '')) {
+	width: ((100% / @columns) * @share);
+}
+.column(spaced; @share; @columns: @gridColumns; @margin: @gridMargin) {
+	margin-left: @margin;
+	width: (((100% / @columns) * @share) - (@margin));
+}
+.column-modify(@share; @columns: @gridColumns) {
+	width: ((100% / @columns) * @share);
+}
+.column-modify(spaced; @share; @columns: @gridColumns; @margin: @gridMargin) {
+	margin-left: @margin;
+	width: (((100% / @columns) * @share) - (@margin));
+}
+.column-modify(@width) when not (isunit(@width, '')) {
+	width: @width;
+}
+.column-reset(@resetMargin: false) {
+	float: none;
+	width: auto;
+
+	.check() when (@resetMargin = true) {
+		margin-left: 0;
+	}
+	.check();
+}
+.column-pull(@share; @columns: @gridColumns) {
+	position: relative;
+	right: ((100% / @columns) * @share);
+}
+.column-push(@share; @columns: @gridColumns) {
+	left: ((100% / @columns) * @share);
+	position: relative;
+}
+.column-offset(@share; @columns: @gridColumns) {
+	margin-left: ((100% / @columns) * @share);
+}
+.column-offset(spaced; @share; @columns: @gridColumns; @margin: (@gridMargin / 2)) {
+	margin-left: (((100% / @columns) * @share) + (@margin * 2));
+}
+
+/*------------------------------------*\
+	# Transitions
+\*------------------------------------*/
+.transition(@value) when (isstring(@value)) {
+	// -webkit-transition+: ~'@{value}';
+	transition+: ~'@{value}';
+}
+.transition(@property: all; @duration: @defaultDuration; @ease: @defaultTiming; @delay: 0s) {
+	.check() when (@property = transform) {
+		-webkit-transition+: ~'-webkit-transform @{duration} @{ease} @{delay}';
+	}
+	.check() when (default()) {
+		-webkit-transition+: @arguments;
+	}
+	.check();
+	transition+: @arguments;
+}
+.transition-delay(@delay: 1s) {
+	-webkit-transition-delay: @delay;
+	transition-delay: @delay;
+}
+.transition-duration(@duration: @defaultDuration) {
+	-webkit-transition-duration: @duration;
+	transition-duration: @duration;
+}
+.transition-property(@property: all) {
+	.check() when (@property = transform) {
+		-webkit-transition-property: -webkit-transform;
+	}
+	.check() when (default()) {
+		-webkit-transition-property: @property;
+	}
+	.check();
+	transition-property: @property;
+}
+.transition-timing-function(@function: @defaultTiming) {
+	-webkit-transition-timing-function: @function;
+	transition-timing-function: @function;
+}
+
+/*------------------------------------*\
+	# Transforms
+\*------------------------------------*/
+.transform(...) {
+	-ms-transform+_: @arguments;
+	-webkit-transform+_: @arguments;
+	transform+_: @arguments;
+}
+.transform-origin(@x; @y: 0) {
+	.check() when (isunit(@x, '')) {
+		@tempX: unit(@x, rem);
+	}
+	.check() when not (isunit(@x, '')) {
+		@tempX: @x;
+	}
+	.check() when (isunit(@y, '')) {
+		@tempY: unit(@y, rem);
+	}
+	.check() when not (isunit(@y, '')) {
+		@tempY: @y;
+	}
+	.check();
+	-ms-transform-origin: @tempX @tempY;
+	-webkit-transform-origin: @tempX @tempY;
+	transform-origin: @tempX @tempY;
+}
+.rotate(@angle: 45) {
+	.transform(rotate(unit(@angle, deg)));
+}
+.scale(x; @value: 1) {
+	.transform(scaleX(@value));
+}
+.scale(y; @value: 1) {
+	.transform(scaleY(@value));
+}
+.scale(@value: 1) when (default()) {
+	.transform(scale(@value));
+}
+.skew(x; @x: 45) {
+	.transform(skewX(unit(@x, deg)));
+}
+.skew(y; @y: 45) {
+	.transform(skewY(unit(@y, deg)));
+}
+.skew(@x: 45; @y: 0) when (default()) {
+	.transform(skew(unit(@x, deg), unit(@y, deg)));
+}
+.translate(x; @value) {
+	.check() when (isunit(@value, '')) {
+		@temp: unit(@value, rem);
+	}
+	.check() when (default()) {
+		@temp: @value;
+	}
+	.check();
+	.transform(translateX(@temp));
+}
+.translate(y; @value) {
+	.check() when (isunit(@value, '')) {
+		@temp: unit(@value, rem);
+	}
+	.check() when (default()) {
+		@temp: @value;
+	}
+	.check();
+	.transform(translateY(@temp));
+}
+.translate(@x: 0; @y: 0) when not (@x = x)
+		and not (@x = y) {
+	.check() when (isunit(@x, '')) {
+		@tempX: unit(@x, rem);
+	}
+	.check() when not (isunit(@x, '')) {
+		@tempX: @x;
+	}
+	.check() when (isunit(@y, '')) {
+		@tempY: unit(@y, rem);
+	}
+	.check() when not (isunit(@y, '')) {
+		@tempY: @y;
+	}
+	.check();
+	.transform(translate(@tempX, @tempY));
+}
+.translate(@x; @y; @z) {
+	.check() when (isunit(@x, '')) {
+		@tempX: unit(@x, rem);
+	}
+	.check() when (isunit(@x, '')) {
+		@tempX: @x;
+	}
+	.check() when (isunit(@y, '')) {
+		@tempY: unit(@y, rem);
+	}
+	.check() when (isunit(@y, '')) {
+		@tempY: @y;
+	}
+	.check() when (isunit(@z, '')) {
+		@tempZ: unit(@z, rem);
+	}
+	.check() when (isunit(@z, '')) {
+		@tempZ: @z
+	}
+	.check();
+	.transform(translate3d(@x, @y, @z));
+}
+
+/*------------------------------------*\
+	# Opacity
+\*------------------------------------*/
+.opacity(@value) {
+	.check() when (ispercentage(@value)) {
+		@temp: unit((@value / 100));
+	}
+	.check() when (@value > 1)
+			and not (ispercentage(@value)) {
+		@temp: (@value / 100);
+	}
+	.check() when (default()) {
+		@temp: @value;
+	}
+	.check();
+	opacity: @temp;
+}
+
+/*------------------------------------*\
+	# Placeholder
+\*------------------------------------*/
+.placeholder(@color: @inputPlaceholderColor) {
+	&::-webkit-input-placeholder { color: @color; }
+	&::-moz-placeholder { color: @color; }
+	&:-ms-input-placeholder { color: @color; }
+	&::-ms-input-placeholder { color: @color; }
+}
+
+/*------------------------------------*\
+	# Gradients
+\*------------------------------------*/
+.gradient(@type; @colors; @dir: 0deg; @prefixes: webkit, moz, ms, o; @index: length(@prefixes)) when (@index > 0) {
+	.gradient(@type; @colors; @dir; @prefixes; (@index - 1));
+
+	@prefix  : extract(@prefixes, @index);
+	@dir-old : 90 - (@dir);
+
+	background-image: ~"-@{prefix}-@{type}-gradient(@{dir-old}, @{colors})";
+
+	& when (@index = length(@prefixes)) {
+		background-image: ~"@{type}-gradient(@{dir}, @{colors})";
+	}
+}
+
+.border-gradient(@type; @colors; @dir: 0deg; @prefixes: webkit, moz, ms, o; @index: length(@prefixes)) when (@index > 0) {
+	.border-gradient(@type; @colors; @dir; @prefixes; (@index - 1));
+
+	@prefix  : extract(@prefixes, @index);
+	@dir-old : 90 - (@dir);
+
+	border-image: ~"-@{prefix}-@{type}-gradient(@{dir-old}, @{colors})";
+
+	& when (@index = length(@prefixes)) {
+		border-image: ~"@{type}-gradient(@{dir}, @{colors})";
+	}
+
+	border-image-slice: 1;
+}
+
+/*------------------------------------*\
+	# Animation
+\*------------------------------------*/
+.animation(...) {
+	animation: @arguments;
+}
+.keyframes(@name; @start; @end) {
+	@-webkit-keyframes ~'@{name}' {
+		0% { @start(); }
+		100% { @end(); }
+	}
+	@keyframes ~'@{name}' {
+		0% { @start(); }
+		100% { @end(); }
+	}
+}

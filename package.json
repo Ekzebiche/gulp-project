@@ -1,21 +1,43 @@
 {
-  "name": "",
-  "version": "1.0.0",
-  "description": "",
-  "author": "Sprime",
-  "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-autoprefixer": "^3.1.1",
-    "gulp-imagemin": "^3.0.3",
-    "gulp-less": "^3.1.0",
-    "gulp-clean-css": "^2.0.12",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-rigger": "^0.5.8",
-    "gulp-uglify": "^2.0.0",
-    "gulp-watch": "^4.3.9",
-    "rimraf": "^2.5.4"
+  "name": "gulp",
+  "version": "2.0.0",
+  "license": "MIT",
+  "description": "Template for frontend develop base on Gulp",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "imagemin-pngquant": "^5.0.0"
+  "author": "Dmitriy Konovalov (Sprime)",
+  "homepage": "http://sprime.ru",
+  "devDependencies": {
+    "browser-sync": "^2.23.6",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^4.1.0",
+    "gulp-changed": "^3.2.0",
+    "gulp-clean-css": "^3.9.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-data": "^1.3.1",
+    "gulp-html-beautify": "^1.0.1",
+    "gulp-imagemin": "^4.1.0",
+    "gulp-less": "^3.4.0",
+    "gulp-notify": "^3.2.0",
+    "gulp-nunjucks-render": "^2.2.2",
+    "gulp-plumber": "^1.2.0",
+    "gulp-prettify": "^0.5.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.6.1",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-svg-sprite": "^1.3.7",
+    "gulp-uglify": "^3.0.0",
+    "gulp-watch": "^5.0.0",
+    "gulp.spritesmith": "^6.9.0",
+    "imagemin-jpegtran": "^5.0.2",
+    "imagemin-pngquant": "^5.0.1",
+    "marked": "^0.3.12",
+    "nunjucks-markdown": "^2.0.1",
+    "path": "^0.12.7",
+    "require-dir": "^1.0.0",
+    "run-sequence": "^2.2.1"
   }
 }
