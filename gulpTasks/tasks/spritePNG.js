@@ -13,9 +13,9 @@ gulp.task('sprite:png', function() {
     .pipe(spritesmith({
       padding: 5,
       cssFormat: 'less',
-      cssName: config.less + '_sprite.less',
+      cssName: '_sprite.less',
       algorithm: 'binary-tree',
-      imgName: 'sprite.png',
+      imgName: '../images/sprite.png',
       cssTemplate: config.less + 'less.template.mustache',
     }))
 
