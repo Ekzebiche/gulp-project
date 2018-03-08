@@ -1,9 +1,9 @@
 {
-  "addCssBefore": [
+  "addCss": [
     "./node_modules/magnific-popup/dist/magnific-popup.css",
     "./node_modules/slick-carousel/slick/slick.css"
   ],
-  "addCssAfter": [
+  "addCssSrc": [
     "./src/css/csslib/*.css"
   ],
   "addJsBefore": [

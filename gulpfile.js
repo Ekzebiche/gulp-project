@@ -22,7 +22,7 @@ const newer = require('gulp-newer');
 let projectConfig = require('./config.json');
 let dirs = projectConfig.dirs;
 let lists = getFilesList(projectConfig);
-// console.log(lists.js);
+console.log(lists);
 
 // Получение адреса репозитория
 let repoUrl = require('./package.json').repository.url.replace(/\.git$/g, '');
@@ -378,7 +378,7 @@ gulp.task('serve', gulp.series('build', function() {
 
   // Стили, которые нужно компилировать отдельно
   let cssPaths = [ dirs.srcPath + 'css/csslib/*.css' ]
-  cssPaths.concat(projectConfig.addCssBefore, projectConfig.addCssAfter);
+  cssPaths.concat(projectConfig.addCss, projectConfig.addCssSrc);
   gulp.watch(dirs.srcPath + 'css/csslib/**/*.css', gulp.series('style:css'));
 
   // HTML
@@ -427,8 +427,8 @@ function getFilesList(config){
   };
 
   // Добавления
-  res.css = res.css.concat(config.addCssAfter);
-  res.css = config.addCssBefore.concat(res.css);
+  res.css = res.css.concat(config.addCss);
+  res.css = config.addCssSrc.concat(res.css);
   res.js = res.js.concat(config.addJsAfter);
   res.js = config.addJsBefore.concat(res.js);
 
