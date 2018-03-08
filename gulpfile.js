@@ -26,7 +26,7 @@ let lists = getFilesList(projectConfig);
 
 // Получение адреса репозитория
 let repoUrl = require('./package.json').repository.url.replace(/\.git$/g, '');
-console.log('Репозиторий: ' + repoUrl + '\n');
+console.log('Репозиторий: ' + repoUrl);
 
 const isDev = !process.env.NODE_ENV || process.env.NODE_ENV == 'dev';
 
