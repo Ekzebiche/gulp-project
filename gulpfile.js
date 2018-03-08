@@ -26,7 +26,7 @@ let lists = getFilesList(projectConfig);
 
 // Получение адреса репозитория
 let repoUrl = require('./package.json').repository.url.replace(/\.git$/g, '');
-// console.log(repoUrl);
+console.log('Репозиторий: ' + repoUrl + '\n');
 
 const isDev = !process.env.NODE_ENV || process.env.NODE_ENV == 'dev';
 
@@ -61,7 +61,9 @@ gulp.task('style:less', function () {
     .pipe(wait(100))
     .pipe(gulpIf(isDev, sourcemaps.init()))
     .pipe(debug({title: "Less:"}))
-    .pipe(less({includePaths: [__dirname+'/']}))
+    .pipe(less({
+      includePaths: [__dirname, dirs.srcPath + 'css/less/']
+    }))
     .pipe(autoprefixer({
       cascade: false,
       browsers: ['> 1%', 'last 2 versions', 'IE 10'],
@@ -192,6 +194,22 @@ gulp.task('js', function (callback) {
     }
 });
 
+// Копирование JS
+gulp.task('copy:js', function (callback) {
+  if(projectConfig.copiedJs.length) {
+    return gulp.src(projectConfig.copiedJs)
+      .pipe(size({
+        title: 'Размер',
+        showFiles: true,
+        showTotal: false,
+      }))
+      .pipe(gulp.dest(dirs.buildPath + '/js'));
+  } else {
+    callback();
+  }
+});
+
+
 // Копирование основных изображений
 gulp.task('copy:img-general', function () {
   const imagemin = require('gulp-imagemin');
@@ -199,7 +217,7 @@ gulp.task('copy:img-general', function () {
 
   console.log('---------- Копирование основных изображений');
 
-  return gulp.src(dirs.srcPath + 'images/general/*.{jpg,jpeg,gif,png,svg,ico}')
+  return gulp.src(dirs.srcPath + 'images/general/**/*.{jpg,jpeg,gif,png,svg,ico}')
     .pipe(newer(dirs.buildPath + '/images/general'))
     .pipe(gulpIf(!isDev, imagemin({
       progressive: true,
@@ -221,7 +239,7 @@ gulp.task('copy:img-content', function () {
 
   console.log('---------- Копирование временных изображений');
 
-  return gulp.src(dirs.srcPath + 'images/content/*.{jpg,jpeg,gif,png,svg,ico}')
+  return gulp.src(dirs.srcPath + 'images/content/**/*.{jpg,jpeg,gif,png,svg,ico}')
     .pipe(newer(dirs.buildPath + '/images/content'))
     .pipe(gulpIf(!isDev, imagemin({
       progressive: true,
@@ -240,7 +258,7 @@ gulp.task('copy:img-content', function () {
 gulp.task('copy:fonts', function () {
   console.log('---------- Копирование шрифтов');
 
-  return gulp.src(dirs.srcPath + '/fonts/*.{ttf,woff,woff2,eot,svg}')
+  return gulp.src(dirs.srcPath + '/fonts/**/*.{ttf,woff,woff2,eot,svg}')
     .pipe(newer(dirs.buildPath + '/fonts'))  // оставить в потоке только изменившиеся файлы
     .pipe(size({
       title: 'Размер',
@@ -260,7 +278,6 @@ gulp.task('copy:static', function () {
 
 // Сборка растрового спрайта sprite-png
 let spritePngPath = dirs.srcPath + 'images/sprite/png/';
-
 gulp.task('sprite:png', function (callback) {
   const spritesmith = require('gulp.spritesmith');
   const buffer = require('vinyl-buffer');
@@ -342,7 +359,7 @@ gulp.task('sprite:svg', function (callback) {
 gulp.task('build', gulp.series(
   'clean',
   gulp.parallel('sprite:png', 'sprite:svg', 'copy:static'),
-  gulp.parallel('style:less', 'style:css', 'js', 'copy:img-general', 'copy:img-content'),
+  gulp.parallel('style:less', 'style:css', 'js', 'copy:js', 'copy:img-general', 'copy:img-content'),
   'html'
 ));
 
@@ -369,6 +386,11 @@ gulp.task('serve', gulp.series('build', function() {
 
   // JS-файлы
   gulp.watch(lists.js, gulp.series('js', reload));
+
+  // JS-файлы, которые нужно просто копировать
+  if(projectConfig.copiedJs.length) {
+    gulp.watch(projectConfig.copiedJs, gulp.series('copy:js', reload));
+  }
 
   // Основные изображения
   gulp.watch(dirs.buildPath + 'images/general/*.{jpg,jpeg,gif,png,svg,ico}', gulp.series('copy:img-general', reload));

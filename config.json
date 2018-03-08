@@ -18,6 +18,7 @@
   "addJsAfter": [
     "./src/js/libs.js"
   ],
+  "copiedJs": [],
   "dirs": {
     "srcPath": "./src/",
     "buildPath": "./build/"
