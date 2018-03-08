@@ -22,7 +22,7 @@ const newer = require('gulp-newer');
 let projectConfig = require('./config.json');
 let dirs = projectConfig.dirs;
 let lists = getFilesList(projectConfig);
-console.log(lists);
+// console.log(lists);
 
 // Получение адреса репозитория
 let repoUrl = require('./package.json').repository.url.replace(/\.git$/g, '');
