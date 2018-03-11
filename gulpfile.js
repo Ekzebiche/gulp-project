@@ -218,7 +218,7 @@ gulp.task('copy:img-general', function () {
   console.log('---------- Копирование основных изображений');
 
   return gulp.src(dirs.srcPath + 'images/general/**/*.{jpg,jpeg,gif,png,svg,ico}')
-    .pipe(newer(dirs.buildPath + '/images/general'))
+    .pipe(newer(dirs.buildPath + '/images'))
     .pipe(gulpIf(!isDev, imagemin({
       progressive: true,
       svgoPlugins: [{removeViewBox: false}],
@@ -240,7 +240,7 @@ gulp.task('copy:img-content', function () {
   console.log('---------- Копирование временных изображений');
 
   return gulp.src(dirs.srcPath + 'images/content/**/*.{jpg,jpeg,gif,png,svg,ico}')
-    .pipe(newer(dirs.buildPath + '/images/content'))
+    .pipe(newer(dirs.buildPath + '/temp'))
     .pipe(gulpIf(!isDev, imagemin({
       progressive: true,
       svgoPlugins: [{removeViewBox: false}],
@@ -393,16 +393,16 @@ gulp.task('serve', gulp.series('build', function() {
   }
 
   // Основные изображения
-  gulp.watch(dirs.buildPath + 'images/general/*.{jpg,jpeg,gif,png,svg,ico}', gulp.series('copy:img-general', reload));
+  gulp.watch(dirs.srcPath + 'images/general/*.{jpg,jpeg,gif,png,svg,ico}', gulp.series('copy:img-general', reload));
 
   // Временные изображения
-  gulp.watch(dirs.buildPath + 'images/content/*.{jpg,jpeg,gif,png,svg,ico}', gulp.series('copy:img-content', reload));
+  gulp.watch(dirs.srcPath + 'images/content/*.{jpg,jpeg,gif,png,svg,ico}', gulp.series('copy:img-content', reload));
 
   // Шрифты
   gulp.watch(dirs.srcPath + 'fonts/*.{ttf,woff,woff2,eot,svg}', gulp.series('copy:fonts', reload));
 
   // Статичные файлы
-  gulp.watch(dirs.buildPath + 'static/**/*.*', gulp.series('copy:static', reload));
+  gulp.watch(dirs.srcPath + 'static/**/*.*', gulp.series('copy:static', reload));
 
   // PNG-изображения, попадающие в спрайт
   gulp.watch('*.png', {cwd: spritePngPath}, gulp.series('sprite:png', reload));
